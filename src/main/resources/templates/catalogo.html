@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meu Catálogo | CineLog</title>
+  <link rel="stylesheet" href="/app.css"/>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="brand" href="/catalogo">
+        <span class="brand-mark">CineLog</span>
+        <span class="brand-sub">Meu catálogo</span>
+      </a>
+      <div class="actions">
+        <a class="btn btn-ghost" href="/buscar">Buscar filmes</a>
+        <form method="post" action="/logout">
+          <button class="btn btn-danger" type="submit">Sair</button>
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        </form>
+      </div>
+    </header>
+
+    <section class="panel hero">
+      <h1>Meu Catálogo</h1>
+      <p>Todos os filmes salvos com sua nota e comentário.</p>
+      <div class="stats">
+        <span class="badge" th:text="'Total: ' + ${totalFilmes}"></span>
+        <span class="badge" th:text="'Média: ' + ${#numbers.formatDecimal(mediaNotas, 1, 1)}"></span>
+      </div>
+    </section>
+
+    <div class="alert alert-ok" th:if="${sucesso}" th:text="${sucesso}"></div>
+    <div class="alert alert-danger" th:if="${erro}" th:text="${erro}"></div>
+
+    <section class="grid-results" th:if="${filmes != null and !#lists.isEmpty(filmes)}">
+      <article class="movie-card" th:each="f : ${filmes}">
+        <img th:src="${f.poster}" th:alt="${f.titulo}"/>
+        <div>
+          <div class="movie-head">
+            <h3 class="movie-title" th:text="${f.titulo}"></h3>
+            <span class="badge" th:text="'Nota: ' + ${f.nota}"></span>
+          </div>
+          <p class="meta" th:text="${f.comentario != null and !#strings.isEmpty(f.comentario) ? f.comentario : 'Sem comentário'}"></p>
+          <form method="post" th:action="@{/remover/{id}(id=${f.id})}">
+            <button class="btn btn-danger" type="submit">Remover</button>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          </form>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel empty" th:if="${filmes == null or #lists.isEmpty(filmes)}">
+      Seu catálogo ainda está vazio. Vá em "Buscar filmes" para começar.
+    </section>
+  </main>
+</body>
+</html>

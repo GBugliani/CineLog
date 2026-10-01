@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | CineLog</title>
+  <link rel="stylesheet" href="/app.css"/>
+</head>
+<body>
+  <main class="auth-wrap">
+    <section class="auth-grid">
+      <article class="auth-intro">
+        <a class="brand" href="/login">
+          <span class="brand-mark">CineLog</span>
+          <span class="brand-sub">Seu diário de filmes</span>
+        </a>
+        <h1>Volte para a sua sessão de cinema.</h1>
+        <p>Descubra, avalie e comente os filmes que marcaram seu dia. Tudo em um catálogo pessoal bonito e prático.</p>
+        <p class="quote">"Todo filme vira memória quando você registra o que sentiu."</p>
+      </article>
+
+      <article class="card">
+        <h2>Entrar</h2>
+        <p class="helper">Acesse sua conta para ver seu catálogo.</p>
+
+        <div class="alert alert-danger" th:if="${param.error}">
+          Usuário ou senha inválidos.
+        </div>
+        <div class="alert alert-ok" th:if="${param.logout}">
+          Sessão encerrada com sucesso.
+        </div>
+        <div class="alert alert-ok" th:if="${param.registered}">
+          Conta criada. Agora faça login.
+        </div>
+
+        <form class="form-grid" method="post" action="/login">
+          <input type="text" name="username" placeholder="Usuário" required/>
+          <input type="password" name="password" placeholder="Senha" required/>
+          <button class="btn btn-primary" type="submit">Entrar</button>
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        </form>
+        <p class="helper">Ainda não tem conta?</p>
+        <a class="btn btn-ghost" href="/registro">Criar conta</a>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

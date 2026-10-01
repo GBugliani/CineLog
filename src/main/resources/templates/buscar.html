@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Buscar Filmes | CineLog</title>
+  <link rel="stylesheet" href="/app.css"/>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="brand" href="/catalogo">
+        <span class="brand-mark">CineLog</span>
+        <span class="brand-sub">Busca</span>
+      </a>
+      <div class="actions">
+        <a class="btn btn-ghost" href="/catalogo">Meu catálogo</a>
+        <form method="post" action="/logout">
+          <button class="btn btn-danger" type="submit">Sair</button>
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        </form>
+      </div>
+    </header>
+
+    <section class="panel hero">
+      <h1>Buscar filmes</h1>
+      <p>Digite um título e salve os filmes com nota e comentário pessoal.</p>
+      <form class="actions" method="get" action="/buscar">
+        <input type="text" name="titulo" placeholder="Nome do filme" th:value="${param.titulo}"/>
+        <button class="btn btn-primary" type="submit">Buscar</button>
+      </form>
+    </section>
+
+    <div class="alert alert-danger" th:if="${erro}" th:text="${erro}"></div>
+
+    <section class="grid-results" th:if="${resultados != null and !#lists.isEmpty(resultados)}">
+      <article class="movie-card" th:each="f : ${resultados}">
+        <img th:src="${f.poster}" th:alt="${f.title}"/>
+        <div>
+          <div class="movie-head">
+            <h3 class="movie-title" th:text="${f.title}"></h3>
+            <span class="meta" th:text="${f.year}"></span>
+          </div>
+
+          <div class="movie-details">
+            <p class="meta" th:if="${!#strings.isEmpty(f.genre)}" th:text="'Gênero: ' + ${f.genre}"></p>
+            <p class="meta" th:if="${!#strings.isEmpty(f.runtime)}" th:text="'Duração: ' + ${f.runtime}"></p>
+            <p class="meta" th:if="${!#strings.isEmpty(f.director)}" th:text="'Direção: ' + ${f.director}"></p>
+            <p class="meta" th:if="${!#strings.isEmpty(f.actors)}" th:text="'Elenco: ' + ${f.actors}"></p>
+            <p class="meta plot" th:if="${!#strings.isEmpty(f.plot)}" th:text="${f.plot}"></p>
+          </div>
+
+          <form class="movie-form" method="post" action="/salvar">
+            <input type="hidden" name="imdbId" th:value="${f.imdbId}"/>
+            <input type="hidden" name="titulo" th:value="${f.title}"/>
+            <input type="hidden" name="poster" th:value="${f.poster}"/>
+
+            <div class="movie-form-row">
+              <input type="number" name="nota" min="1" max="5" placeholder="Nota (1-5)" required/>
+              <input type="text" name="comentario" placeholder="Comentário (opcional)"/>
+            </div>
+
+            <div class="actions">
+              <button class="btn btn-primary" type="submit">Salvar no catálogo</button>
+              <span class="badge">Pronto para assistir</span>
+            </div>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          </form>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel empty" th:if="${resultados == null or #lists.isEmpty(resultados)}">
+      Faça uma busca para começar a montar seu catálogo.
+    </section>
+  </main>
+</body>
+</html>

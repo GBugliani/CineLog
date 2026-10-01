@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro | CineLog</title>
+  <link rel="stylesheet" href="/app.css"/>
+</head>
+<body>
+  <main class="auth-wrap">
+    <section class="auth-grid">
+      <article class="auth-intro">
+        <a class="brand" href="/login">
+          <span class="brand-mark">CineLog</span>
+          <span class="brand-sub">Seu diário de filmes</span>
+        </a>
+        <h1>Crie sua conta em segundos.</h1>
+        <p>Comece a montar uma filmoteca pessoal com notas e comentários que fazem sentido para você.</p>
+        <p class="quote">"Crítica boa é a que você escreve para lembrar por que gostou."</p>
+      </article>
+
+      <article class="card">
+        <h2>Cadastro</h2>
+        <p class="helper">Preencha os dados para criar sua conta.</p>
+
+        <div class="alert alert-danger" th:if="${erro}" th:text="${erro}"></div>
+
+        <form class="form-grid" method="post" action="/registro">
+          <input type="text" name="username" placeholder="Usuário" required/>
+          <input type="password" name="password" placeholder="Senha" required/>
+          <button class="btn btn-primary" type="submit">Registrar</button>
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        </form>
+        <p class="helper">Já possui conta?</p>
+        <a class="btn btn-ghost" href="/login">Ir para login</a>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
